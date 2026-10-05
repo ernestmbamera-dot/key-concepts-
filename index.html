@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Biostatistics Quiz — BST 32101</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #090e14;
+  --surface: #121a24;
+  --surface2: #1b2635;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.13);
+  --text: #f0f0f0;
+  --muted: #8a9ca8;
+  --accent: #3498db;
+  --accent2: #2980b9;
+  --green: #2ecc71;
+  --red: #e74c3c;
+  --amber: #f1c40f;
+  --pill-bg: rgba(52, 152, 219, 0.12);
+  --pill-border: rgba(52, 152, 219, 0.3);
+  --font-display: 'Syne', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 15px; line-height: 1.65; min-height: 100vh; }
+body::before { content: ''; position: fixed; inset: 0; background-image: linear-gradient(rgba(52,152,219,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(52,152,219,0.03) 1px, transparent 1px); background-size: 40px 40px; pointer-events: none; z-index: 0; }
+.wrap { position: relative; z-index: 1; max-width: 760px; margin: 0 auto; padding: 0 20px 80px; }
+.screen { display: none; animation: fadeUp 0.4s ease; }
+.screen.active { display: block; }
+@keyframes fadeUp { from { opacity:0; transform: translateY(16px); } to { opacity:1; transform: translateY(0); } }
+nav { display: flex; align-items: center; justify-content: space-between; padding: 20px 0; margin-bottom: 20px; border-bottom: 1px solid var(--border); }
+.nav-logo { font-family: var(--font-display); font-weight: 800; font-size: 15px; letter-spacing: 0.05em; color: var(--accent); }
+.nav-logo span { color: var(--muted); font-weight: 400; }
+.nav-links { display: flex; gap: 6px; }
+.nav-btn { background: transparent; border: 1px solid var(--border2); color: var(--muted); padding: 6px 14px; border-radius: 40px; font-size: 12px; font-family: var(--font-body); cursor: pointer; transition: all 0.2s; }
+.nav-btn:hover, .nav-btn.active { border-color: var(--accent); color: var(--accent); background: var(--pill-bg); }
+.hero { padding: 50px 0 36px; }
+.hero-tag { display: inline-flex; align-items: center; gap: 8px; background: var(--pill-bg); border: 1px solid var(--pill-border); color: var(--accent); font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 5px 14px; border-radius: 40px; margin-bottom: 28px; }
+.hero-tag::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+h1 { font-family: var(--font-display); font-size: clamp(34px, 6vw, 56px); font-weight: 800; line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 18px; }
+h1 em { font-style: normal; color: var(--accent); }
+.hero-sub { font-size: 15px; color: var(--muted); max-width: 520px; margin-bottom: 32px; line-height: 1.7; }
+.hero-stats { display: flex; gap: 28px; margin-bottom: 36px; }
+.stat-n { font-family: var(--font-display); font-size: 28px; font-weight: 700; color: var(--text); }
+.stat-l { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 2px; }
+.register-card { background: var(--surface); border: 1px solid var(--border2); border-radius: 16px; padding: 32px; margin-bottom: 40px; }
+.register-card h2 { font-family: var(--font-display); font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+.register-card p { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+.form-row.full { grid-template-columns: 1fr; }
+label { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 6px; }
+input, select { width: 100%; background: var(--surface2); border: 1px solid var(--border2); border-radius: 8px; color: var(--text); font-family: var(--font-body); font-size: 14px; padding: 10px 14px; outline: none; transition: border-color 0.2s; }
+input:focus, select:focus { border-color: var(--accent); }
+.topic-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.topic-toggle { background: var(--surface2); border: 1px solid var(--border2); color: var(--muted); padding: 6px 14px; border-radius: 40px; font-size: 12px; cursor: pointer; font-family: var(--font-body); transition: all 0.2s; }
+.topic-toggle.on { background: var(--pill-bg); border-color: var(--pill-border); color: var(--accent); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: var(--font-body); font-size: 14px; font-weight: 700; padding: 11px 22px; border-radius: 40px; cursor: pointer; border: none; transition: all 0.2s; text-decoration: none; color: #fff; background: var(--accent); }
+.btn:hover { background: #5dade2; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(52,152,219,0.3); }
+.btn-ghost { background: transparent; border: 1px solid var(--border2); color: var(--muted); font-weight: 500; }
+.btn-ghost:hover { border-color: var(--border2); color: var(--text); background: var(--surface2); box-shadow: none; }
+.btn-sm { padding: 8px 16px; font-size: 13px; }
+.progress-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.progress-label { font-size: 12px; color: var(--muted); }
+.progress-score { font-family: var(--font-display); font-size: 14px; font-weight: 600; color: var(--accent); }
+.progress-track { height: 3px; background: var(--surface2); border-radius: 3px; margin-bottom: 28px; overflow: hidden; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent2), var(--accent)); border-radius: 3px; transition: width 0.5s cubic-bezier(0.4,0,0.2,1); }
+.q-card { background: var(--surface); border: 1px solid var(--border2); border-radius: 16px; padding: 28px 28px 20px; margin-bottom: 16px; }
+.q-section-tag { display: inline-block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); background: var(--pill-bg); border: 1px solid var(--pill-border); padding: 3px 10px; border-radius: 40px; margin-bottom: 14px; }
+.q-text { font-family: var(--font-display); font-size: 18px; font-weight: 600; line-height: 1.4; color: var(--text); margin-bottom: 22px; }
+.options { display: grid; gap: 9px; }
+.opt-btn { display: flex; align-items: flex-start; gap: 12px; background: var(--surface2); border: 1px solid var(--border2); border-radius: 10px; padding: 13px 16px; text-align: left; cursor: pointer; width: 100%; font-family: var(--font-body); font-size: 14px; color: var(--text); transition: all 0.2s; line-height: 1.5; }
+.opt-btn:hover:not(:disabled) { border-color: var(--accent); background: rgba(52,152,219,0.06); }
+.opt-btn:disabled { cursor: default; }
+.opt-letter { min-width: 24px; height: 24px; border-radius: 6px; background: var(--border); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: var(--muted); font-family: var(--font-display); flex-shrink: 0; margin-top: 1px; }
+.opt-btn.correct { border-color: var(--green); background: rgba(46,204,113,0.08); }
+.opt-btn.correct .opt-letter { background: var(--green); color: #000; }
+.opt-btn.wrong { border-color: var(--red); background: rgba(231,76,60,0.08); }
+.opt-btn.wrong .opt-letter { background: var(--red); color: #fff; }
+.feedback-box { border-radius: 10px; padding: 14px 16px; font-size: 13px; line-height: 1.65; margin-bottom: 14px; display: none; }
+.feedback-box.correct { background: rgba(46,204,113,0.1); border: 1px solid rgba(46,204,113,0.3); color: #2ecc71; }
+.feedback-box.wrong { background: rgba(231,76,60,0.1); border: 1px solid rgba(231,76,60,0.3); color: #e74c3c; }
+.feedback-box strong { display: block; margin-bottom: 4px; font-family: var(--font-display); font-size: 13px; }
+.discussion-section { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px; margin-bottom: 16px; display: none; }
+.discussion-section h4 { font-family: var(--font-display); font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 14px; }
+.comments-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; max-height: 260px; overflow-y: auto; }
+.comment { background: var(--surface2); border-radius: 8px; padding: 10px 12px; font-size: 13px; }
+.comment-author { font-weight: 500; color: var(--accent); font-size: 12px; margin-bottom: 3px; }
+.comment-text { color: var(--text); line-height: 1.5; }
+.comment-time { font-size: 10px; color: var(--muted); margin-top: 4px; }
+.comment-input-row { display: flex; gap: 8px; }
+.comment-input-row input { flex: 1; }
+.no-comments { font-size: 12px; color: var(--muted); font-style: italic; }
+.quiz-nav { display: flex; align-items: center; justify-content: space-between; }
+.result-hero { text-align: center; padding: 60px 0 40px; }
+.result-ring { width: 140px; height: 140px; border-radius: 50%; background: conic-gradient(var(--accent) var(--pct, 0%), var(--surface2) 0%); display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; box-shadow: 0 0 40px rgba(52,152,219,0.2); }
+.result-ring-inner { width: 108px; height: 108px; border-radius: 50%; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.result-pct { font-family: var(--font-display); font-size: 32px; font-weight: 800; }
+.result-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+.result-title { font-family: var(--font-display); font-size: 28px; font-weight: 700; margin-bottom: 10px; }
+.result-sub { color: var(--muted); max-width: 480px; margin: 0 auto 32px; font-size: 14px; line-height: 1.65; }
+.result-breakdown { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 36px; }
+.breakdown-card { background: var(--surface); border: 1px solid var(--border2); border-radius: 12px; padding: 18px; text-align: center; }
+.breakdown-n { font-family: var(--font-display); font-size: 28px; font-weight: 700; }
+.breakdown-l { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+.lb-card { background: var(--surface); border: 1px solid var(--border2); border-radius: 16px; overflow: hidden; margin-bottom: 24px; }
+.lb-header { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.lb-header h3 { font-family: var(--font-display); font-size: 16px; }
+.lb-row { display: flex; align-items: center; gap: 16px; padding: 14px 24px; border-bottom: 1px solid var(--border); transition: background 0.15s; }
+.lb-row:hover { background: var(--surface2); }
+.lb-rank { font-family: var(--font-display); font-size: 14px; font-weight: 700; color: var(--muted); width: 28px; text-align: center; }
+.lb-rank.gold { color: #f1c40f; } .lb-rank.silver { color: #bdc3c7; } .lb-rank.bronze { color: #e67e22; }
+.lb-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 13px; font-weight: 700; }
+.lb-info { flex: 1; }
+.lb-name { font-size: 14px; font-weight: 500; }
+.lb-meta { font-size: 11px; color: var(--muted); }
+.lb-score-wrap { text-align: right; }
+.lb-score { font-family: var(--font-display); font-size: 18px; font-weight: 700; color: var(--accent); }
+.lb-pct { font-size: 11px; color: var(--muted); }
+.lb-empty { padding: 30px; text-align: center; color: var(--muted); font-size: 13px; }
+.badge-you { background: var(--pill-bg); border: 1px solid var(--pill-border); color: var(--accent); font-size: 10px; padding: 1px 8px; border-radius: 40px; margin-left: 6px; }
+.text-muted { color: var(--muted); }
+@media(max-width: 560px) { .form-row { grid-template-columns: 1fr; } .result-breakdown { grid-template-columns: 1fr 1fr; } h1 { font-size: 32px; } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <nav>
+    <div class="nav-logo">BST32101<span>/biostatistics</span></div>
+    <div class="nav-links">
+      <button class="nav-btn active" onclick="showScreen('home')">Quiz</button>
+      <button class="nav-btn" onclick="showScreen('leaderboard')">Leaderboard</button>
+    </div>
+  </nav>
+
+  <div id="screen-home" class="screen active">
+    <div class="hero">
+      <div class="hero-tag">BST 32101 · FUNDAMENTALS OF BIOSTATISTICS · KEY CONCEPTS</div>
+      <h1>Master <em>Statistics</em><br>from Data to Decisions</h1>
+      <p class="hero-sub">A large bank of exam-style questions covering the meaning and scope of statistics, the statistical process, descriptive vs inferential statistics, population and sample, parameters and statistics, variables and data, primary and secondary data, and worked calculations. Questions and answer positions are shuffled every attempt.</p>
+      <div class="hero-stats">
+        <div class="stat"><div class="stat-n" id="stat-q">0</div><div class="stat-l">Questions</div></div>
+        <div class="stat"><div class="stat-n" id="stat-t">0</div><div class="stat-l">Topics</div></div>
+        <div class="stat"><div class="stat-n" id="stat-players">0</div><div class="stat-l">Attempts</div></div>
+      </div>
+    </div>
+
+    <div class="register-card">
+      <h2>Initialize Training</h2>
+      <p>Enter your details to track your progress on the class leaderboard.</p>
+      <div class="form-row">
+        <div>
+          <label>Full name</label>
+          <input type="text" id="inp-name" placeholder="e.g. Ernest Leo">
+        </div>
+        <div>
+          <label>Reg. number</label>
+          <input type="text" id="inp-reg" placeholder="e.g. 2501013**">
+        </div>
+      </div>
+      <div class="form-row full">
+        <div>
+          <label>Number of questions</label>
+          <select id="inp-count">
+            <option value="20">20 questions (quick)</option>
+            <option value="40" selected>40 questions (exam-length)</option>
+            <option value="60">60 questions</option>
+            <option value="all">All available</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row full">
+        <div>
+          <label>Filter Topics</label>
+          <div class="topic-grid" id="topic-grid"></div>
+        </div>
+      </div>
+      <button class="btn" onclick="startQuiz()" style="width:100%">Begin Assessment →</button>
+    </div>
+  </div>
+
+  <div id="screen-quiz" class="screen">
+    <div style="padding-top: 24px;">
+      <div class="progress-header">
+        <span class="progress-label" id="prog-label">Question 1</span>
+        <span class="progress-score" id="prog-score">0 pts</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+
+      <div class="q-card">
+        <div class="q-section-tag" id="q-section"></div>
+        <div class="q-text" id="q-text"></div>
+        <div class="options" id="options"></div>
+      </div>
+
+      <div class="feedback-box" id="feedback"></div>
+
+      <div class="discussion-section" id="discussion-section">
+        <h4>💬 Lecture Notes</h4>
+        <div class="comments-list" id="comments-list"></div>
+        <div class="comment-input-row">
+          <input type="text" id="comment-input" placeholder="Add your thought…" maxlength="200" onkeydown="if(event.key==='Enter')postComment()">
+          <button class="btn btn-ghost btn-sm" onclick="postComment()">Post</button>
+        </div>
+      </div>
+
+      <div class="quiz-nav" style="margin-top:20px;">
+        <button class="btn btn-ghost" onclick="showScreen('home')">← Exit</button>
+        <button class="btn" id="next-btn" onclick="nextQ()" style="display:none">Next Question →</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="screen-result" class="screen">
+    <div class="result-hero">
+      <div class="result-ring" id="result-ring">
+        <div class="result-ring-inner">
+          <div class="result-pct" id="result-pct">0%</div>
+          <div class="result-label">score</div>
+        </div>
+      </div>
+      <div class="result-title" id="result-title">Analysis Complete</div>
+      <div class="result-sub" id="result-sub"></div>
+      <div class="result-breakdown">
+        <div class="breakdown-card"><div class="breakdown-n" style="color:var(--green)" id="bd-correct">0</div><div class="breakdown-l">Correct</div></div>
+        <div class="breakdown-card"><div class="breakdown-n" style="color:var(--red)" id="bd-wrong">0</div><div class="breakdown-l">Incorrect</div></div>
+        <div class="breakdown-card"><div class="breakdown-n" style="color:var(--amber)" id="bd-total">0</div><div class="breakdown-l">Total</div></div>
+      </div>
+      <div style="display:flex;gap:10px;justify-content:center">
+        <button class="btn btn-ghost" onclick="restartQuiz()">Retry</button>
+        <button class="btn" onclick="showScreen('leaderboard')">Leaderboard →</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="screen-leaderboard" class="screen">
+    <div style="padding-top: 32px;">
+      <h2 style="font-family:var(--font-display);font-size:26px;font-weight:800;margin-bottom:6px;">Leaderboard</h2>
+      <p class="text-muted" style="font-size:13px;margin-bottom:28px;">BST 32101 rankings — all attempts on this device.</p>
+      <div class="lb-card">
+        <div class="lb-header">
+          <h3>Top scores</h3>
+          <span class="text-muted" style="font-size:12px" id="lb-count">0 attempts</span>
+        </div>
+        <div id="lb-rows"></div>
+      </div>
+      <div style="text-align:center">
+        <button class="btn btn-ghost" onclick="showScreen('home')">Return to Home</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Q(topic, question, CORRECT answer, [3 wrong answers], explanation)
+// The correct answer is written first here, but positions are shuffled at runtime.
+const QUESTIONS = [];
+function Q(s, q, c, w, exp){ QUESTIONS.push({s, q, opts:[c, ...w], exp}); }
+
+const XB = '<span style="text-decoration:overline">x</span>';
+const PH = 'p&#770;';
+
+/* ───────────── MEANING OF STATISTICS ───────────── */
+Q("Meaning of Statistics","Statistics (in its technical sense) is best defined as:","the science of collecting, summarising, analysing and interpreting data",["the study of numerical facts that describe a single event or object","the method of recording measurements after an experiment has ended","the branch of mathematics concerned with exact, fixed outcomes only"],"Statistics is the science of conducting studies to collect, organise, summarise, analyse and draw conclusions from data.");
+Q("Meaning of Statistics","In its everyday (plural) use, the word ‘statistics’ refers to:","numerical facts or data",["a discipline or methodology","a method for drawing graphs","a branch of laboratory science"],"Everyday use: ‘the statistics show that malaria kills X people per year’.");
+Q("Meaning of Statistics","In its technical (singular) use, the word ‘statistics’ refers to:","the discipline or methodology",["numerical facts or figures","a single recorded value","a table of raw counts"],"Technical use: ‘statistics is used to analyse clinical trial data’.");
+Q("Meaning of Statistics","Which sentence uses ‘statistics’ in its technical (singular) sense?","Statistics is used to analyse clinical trial data.",["The statistics show that malaria kills thousands each year.","These statistics were printed in last year’s health report.","The statistics on that page are out of date."],"The singular verb ‘is’ signals the discipline, not the numbers.");
+Q("Meaning of Statistics","Which sentence uses ‘statistics’ in its everyday (plural) sense?","The statistics show that malaria kills X people per year.",["Statistics is taught in the second year of the programme.","Statistics is a tool for scientific research.","Statistics is used to analyse clinical trial data."],"Here ‘statistics’ means numerical facts.");
+Q("Meaning of Statistics","A hospital records the ages of 50 malaria patients. Why are the raw ages alone of limited use?","They must be summarised, for example as an average age",["They are always recorded with too much measurement error","They cannot be entered into any statistical calculation","They only become useful once all the patients recover"],"Raw data need summarising (mean, common age group, proportions) before they answer questions.");
+Q("Meaning of Statistics","Which question can statistics help answer using hospital malaria admission records?","Whether admissions are increasing over time",["Which mosquito species bit each patient","How each patient should be nursed","Why the parasite became resistant to a drug"],"Trends over time, averages, proportions and group comparisons come from statistical analysis.");
+Q("Meaning of Statistics","In scientific research, statistics is used to:","make decisions based on controlled experiments",["replace the need for any careful data collection","prove every theory with complete absolute certainty","remove all natural variation between the subjects"],"Statistics supports decisions with evidence; it does not give certainty or remove variation.");
+Q("Meaning of Statistics","Which activity is NOT part of the definition of statistics given in the lecture?","Repairing the electrical equipment of a laboratory",["Collecting data from a planned scientific study","Summarising the collected data in tables and graphs","Drawing sound conclusions from the analysed data"],"The definition covers collecting, organising, summarising, analysing and concluding from data.");
+Q("Meaning of Statistics","Which is a recognised limitation of statistics?","It describes groups rather than individual cases",["It can never be applied to biological data","It always gives exact results for each individual","It cannot be used to compare two groups"],"Statistical statements describe groups and tendencies, not every individual. (General limitation; the slides list this only as a tutorial question.)");
+Q("Meaning of Statistics","Statistical results can be misleading when:","data are collected poorly or interpreted wrongly",["a computer is used for all of the calculations","the sample is large and carefully randomly selected","the results are displayed in tables and graphs"],"Poor data or wrong interpretation misleads whatever the method. (General limitation.)");
+Q("Meaning of Statistics","Statistical conclusions are generally:","true on average and subject to uncertainty",["true for every individual without exception","fixed for ever once published","unaffected by how the sample was chosen"],"Inferences carry uncertainty and depend on how data were gathered. (General limitation.)");
+Q("Meaning of Statistics","No statistical method can rescue a study whose data were:","poorly collected or unrepresentative",["entered into a spreadsheet by hand","collected from a very large sample","measured in standard scientific units"],"Quality of design and collection limits what analysis can achieve. (General limitation.)");
+
+/* ───────────── BIOSTATISTICS & SCOPE ───────────── */
+Q("Biostatistics & Scope","Biostatistics is best defined as:","the application of statistical methods to biological and health data",["the study of living organisms using only microscopes and lab tools","the application of mathematical proofs to chemical and physical data","the filing of hospital records for administrative purposes only"],"Biostatistics applies statistical methods to biological, medical, public health, agricultural and health-related data.");
+Q("Biostatistics & Scope","Which is an example of biostatistics in action?","Evaluating the effectiveness of a vaccine in a trial",["Sequencing the genome of a bacterium in a laboratory","Constructing a hospital building to national standards","Training nurses to give injections safely"],"Evaluating drugs, vaccines and interventions is a core biostatistical task.");
+Q("Biostatistics & Scope","Monitoring disease outbreaks and vital events such as births and deaths is an application of:","biostatistics",["organic chemistry","civil engineering","financial accounting"],"This is a listed example of biostatistics.");
+Q("Biostatistics & Scope","Comparing maize yields from three fertilizer types is an example of statistics in:","Agriculture",["Education","Demography","Public health"],"Crop yield and fertilizer experiments fall under agriculture.");
+Q("Biostatistics & Scope","A lecturer analyses whether tutorial attendance is related to examination performance. This is statistics in:","Education",["Agriculture","Medicine","Demography"],"Student performance, attendance and teaching effectiveness belong to education.");
+Q("Biostatistics & Scope","A public health officer calculates the percentage of children vaccinated against measles in a district. This is statistics in:","Public health",["Agriculture","Demography","Education"],"Immunisation coverage is a public health measure.");
+Q("Biostatistics & Scope","A clinical trial compares whether a new malaria drug cures patients faster than the standard drug. This is statistics in:","Medicine",["Biology","Education","Demography"],"Clinical trials and drug testing belong to medicine.");
+Q("Biostatistics & Scope","Studying whether water pollution affects fish survival is an example of statistics in:","Biology",["Medicine","Agriculture","Public health"],"Ecology, laboratory experiments and environmental studies are biology applications.");
+Q("Biostatistics & Scope","Studying whether a district’s population is increasing or decreasing is an example of statistics in:","Demography",["Biology","Medicine","Agriculture"],"Demography studies populations: birth, death, migration and growth rates.");
+Q("Biostatistics & Scope","Which of the following is a demographic measure?","Life expectancy",["Pass rate in a course","Hospital bed count","Soil acidity level"],"Demographic measures: birth rate, death rate, fertility rate, life expectancy, migration rate, population growth rate.");
+Q("Biostatistics & Scope","Which topic belongs to statistics in public health?","Immunisation coverage",["Soil fertility studies","Student dropout rates","Animal breeding trials"],"Public health covers prevalence, mortality, immunisation, maternal deaths, malnutrition, HIV and malaria.");
+Q("Biostatistics & Scope","Which topic belongs to statistics in agriculture?","Pest control studies",["Survival analysis","Maternal deaths","Fertility rate"],"Agriculture: crop yield, fertilizer, animal breeding, soil and pest control studies.");
+Q("Biostatistics & Scope","Survival analysis and hospital performance monitoring belong mainly to statistics in:","Medicine",["Agriculture","Education","Demography"],"Medicine includes clinical trials, drug testing, patient outcomes, diagnosis, survival analysis and hospital monitoring.");
+Q("Biostatistics & Scope","Statistics is applied in:","virtually every field of human enquiry",["only the physical and chemical sciences","only medicine, nursing and public health","only government and ministry planning offices"],"Its scope extends across virtually every field of human enquiry.");
+Q("Biostatistics & Scope","Which is NOT given as an example of biostatistics in the lecture?","Auditing a company’s annual financial statements",["Designing experiments and clinical trials","Analysing data from field surveys and lab studies","Informing nutrition and agricultural policy"],"Auditing finances is not listed; the others are.");
+
+/* ───────────── WHY STUDY STATISTICS ───────────── */
+Q("Why Study Statistics","Reporting the mean weight of children instead of listing every child’s weight is an example of:","summarising large amounts of data",["comparing two or more different groups","making predictions about the future","evaluating an intervention programme"],"A mean gives a quick summary of the group.");
+Q("Why Study Statistics","Comparing the average blood pressure of patients on Drug A and Drug B illustrates:","comparing groups",["making predictions","summarising large data","studying relationships"],"Statistics helps compare two or more groups.");
+Q("Why Study Statistics","Using past malaria data to forecast next month’s number of cases illustrates:","making predictions",["comparing groups","supporting decision-making","evaluating an intervention"],"Statistics can predict future outcomes.");
+Q("Why Study Statistics","Asking ‘Is rainfall related to malaria cases?’ illustrates:","studying relationships between variables",["summarising large amounts of data","evaluating a public health intervention","comparing the means of exactly two groups"],"Relationships are studied using correlation and regression.");
+Q("Why Study Statistics","Deciding which districts need more malaria control resources illustrates:","supporting decision-making",["making predictions only","summarising large data","comparing two drugs"],"Statistics provides evidence for decisions.");
+Q("Why Study Statistics","Comparing the percentage of underweight children before and after a nutrition programme illustrates:","evaluating interventions",["making predictions","summarising large amounts of data","studying relationships only"],"Statistics helps determine whether a programme or treatment works.");
+Q("Why Study Statistics","Which pair of methods is used to study relationships between variables?","Correlation and regression",["Mean and median","Histograms and pie charts","Census and registration"],"Such relationships can be studied using correlation and regression.");
+Q("Why Study Statistics","A regression model may be used to:","predict a child’s weight from age",["list the weight of every child","register births and deaths","select a random sample"],"Regression predicts one variable from another.");
+Q("Why Study Statistics","When two groups have different average blood pressures, statistics helps decide whether the difference is:","meaningful or could be due to chance",["the result of a recording mistake only","equal in both groups by definition","proven because the sample is large"],"Statistics separates real differences from chance variation.");
+Q("Why Study Statistics","Why is statistics important in science, medicine and policy?","Most decisions in these fields are based on data",["Most decisions here are made without evidence","Data are always simpler than the real world","Only statisticians may make such decisions"],"Evidence from data drives decisions.");
+Q("Why Study Statistics","Which is a typical use of statistics by a Ministry of Health?","Deciding whether a vaccine programme is effective",["Selecting the brand of furniture for hospital wards","Appointing the directors of the central hospitals","Printing identity cards for every registered patient"],"Programme effectiveness is judged with data.");
+Q("Why Study Statistics","Which question is about a relationship between variables?","Is smoking related to lung disease?",["What is the mean age of patients?","How many children were vaccinated?","Which age group is the largest?"],"Relationship questions involve two variables.");
+Q("Why Study Statistics","If underweight prevalence falls from 30% to 18%, statistics helps assess whether:","the improvement is meaningful",["the programme budget was fair","the children grew taller","the survey was well advertised"],"Statistics tells us whether the change is more than chance.");
+
+/* ───────────── THE STATISTICAL PROCESS ───────────── */
+Q("Statistical Process","The five stages of the statistical process, in order, are:","Design, collection, analysis, interpretation, dissemination",["Collection, design, interpretation, analysis, dissemination","Design, analysis, collection, dissemination, interpretation","Analysis, design, collection, dissemination, interpretation"],"Design → Collection → Analysis → Interpretation → Dissemination.");
+Q("Statistical Process","Which stage begins with a clear question: ‘What do I want to study?’","Design",["Collection","Analysis","Dissemination"],"The researcher begins with a clear question and a plan to collect data.");
+Q("Statistical Process","Measuring blood pressure from a sample of adults is the ___ stage.","Collection",["Design","Interpretation","Analysis"],"Collection records the data.");
+Q("Statistical Process","Arranging data in tables and computing means and percentages is the ___ stage.","Analysis",["Design","Collection","Dissemination"],"Analysis uses statistical methods to answer the question.");
+Q("Statistical Process","Explaining what the results mean in context and suggesting actions is the ___ stage.","Interpretation",["Analysis","Collection","Design"],"Interpretation is the step of drawing conclusions and suggesting actions.");
+Q("Statistical Process","Publishing a peer-reviewed paper or a policy brief is the ___ stage.","Dissemination",["Interpretation","Analysis","Collection"],"Dissemination answers ‘How do we communicate?’");
+Q("Statistical Process","‘What is the prevalence of hypertension among adults in Blantyre?’ is a key question from the ___ stage.","Design",["Collection","Analysis","Interpretation"],"Posing the research question is design.");
+Q("Statistical Process","Which are possible sources of data in the collection stage?","Surveys, hospital records, lab tests or experiments",["Peer-reviewed papers, policy briefs or press releases","Bar charts, frequency tables, pie charts or box plots","Confidence intervals, p-values or regression models"],"Collection can use surveys, hospital records, lab tests, experiments or existing databases.");
+Q("Statistical Process","A researcher decides to use simple random sampling to pick 500 maize plots from three districts. Stage?","Design",["Collection","Analysis (descriptive)","Dissemination"],"Choosing the sampling plan is design.");
+Q("Statistical Process","Field assistants measure soil pH and crop yield in each selected plot. Stage?","Collection",["Design","Interpretation","Dissemination"],"Recording values from selected units is collection.");
+Q("Statistical Process","The analyst computes mean yield by district and plots histograms. Stage?","Analysis (descriptive)",["Analysis (inferential)","Interpretation","Design"],"Means and histograms summarise the data without generalising.");
+Q("Statistical Process","The analyst tests with ANOVA whether mean yield differs significantly across districts. Stage?","Analysis (inferential)",["Analysis (descriptive)","Collection","Dissemination"],"A hypothesis test generalises beyond the data.");
+Q("Statistical Process","Results are presented to the Ministry of Agriculture as a policy brief. Stage?","Dissemination",["Interpretation","Analysis (inferential)","Collection"],"Communicating results is dissemination.");
+Q("Statistical Process","If 20% of adults in a study are hypertensive, this means approximately:","1 in every 5 adults in the study had hypertension",["1 in every 20 adults in the study had hypertension","1 in every 2 adults in the study had hypertension","4 in every 5 adults in the study had hypertension"],"20% = 20/100 = 1/5.");
+Q("Statistical Process","Which stage comes immediately before analysis?","Collection",["Interpretation","Design","Dissemination"],"Data must be collected before they are analysed.");
+Q("Statistical Process","The process starts with design because a researcher first needs:","a clear question and a plan for collecting data",["a finished report that is ready to be published","a table of means and summary statistics from the study","a set of firm conclusions that the data must confirm"],"Design comes first.");
+
+/* ───────────── DESCRIPTIVE VS INFERENTIAL ───────────── */
+Q("Descriptive & Inferential","Descriptive statistics consists of:","collecting, organising, summarising and presenting data meaningfully",["estimating unknown population values from a sample using probability","testing claims about a whole population with the help of sample data","predicting future outcomes that lie well beyond the data already collected"],"Descriptive statistics summarises data using numbers, tables and graphs.");
+Q("Descriptive & Inferential","Inferential statistics uses ___ to make generalisations about a larger population.","data from a sample",["complete census records","published tables only","the entire population"],"Inferential statistics generalises from a sample to a population.");
+Q("Descriptive & Inferential","Which tool belongs to descriptive statistics?","Frequency tables",["Confidence intervals","Hypothesis tests","Analysis of variance"],"Frequency tables, means, medians, SDs and graphs are descriptive tools.");
+Q("Descriptive & Inferential","Which tool belongs to inferential statistics?","Confidence intervals",["Frequency tables","Histograms","Standard deviations"],"Hypothesis tests, confidence intervals, regression and ANOVA are inferential tools.");
+Q("Descriptive & Inferential","‘The average birth weight of the 200 neonates studied was 3.1 kg.’ is an example of:","descriptive statistics",["inferential statistics","predictive modelling","experimental design"],"It only describes the data collected.");
+Q("Descriptive & Inferential","‘We estimate the average birth weight of all neonates in Malawi is 3.1 kg (95% CI: 3.0–3.2).’ is an example of:","inferential statistics",["descriptive statistics","a population census","primary data collection"],"It generalises to all neonates and includes uncertainty.");
+Q("Descriptive & Inferential","Which statement about descriptive statistics is correct?","It does not go beyond the data collected",["It always involves uncertainty about a population","It uses probability to generalise findings","It is used only for hypothesis testing"],"Descriptive statistics stays within the observed data.");
+Q("Descriptive & Inferential","Inferential statistics differs from descriptive statistics because it:","goes beyond the observed data and involves uncertainty",["only uses tables and graphs to summarise the observed data","avoids the use of any sample data whatsoever in the analysis","cannot be used for prediction, estimation or testing claims"],"It generalises and carries uncertainty.");
+Q("Descriptive & Inferential","Which is a measure of central tendency?","Median",["Variance","Range","Standard deviation"],"Mean, median and mode are measures of central tendency.");
+Q("Descriptive & Inferential","Which is a measure of dispersion?","Standard deviation",["Arithmetic mean","Median value","Modal category"],"Variance, standard deviation and range measure spread.");
+Q("Descriptive & Inferential","Which is NOT a key task of inferential statistics?","Constructing a frequency table of the sample",["Estimating a population parameter","Testing a claim about a population","Predicting values with a regression model"],"Tabulating the sample is descriptive.");
+Q("Descriptive & Inferential","Estimating a population parameter from a sample statistic is called:","estimation",["dissemination","enumeration","tabulation"],"Estimation is a key task of inferential statistics.");
+Q("Descriptive & Inferential","Testing a claim about a population is called:","hypothesis testing",["data collection","descriptive summary","random allocation"],"Hypothesis testing is a key inferential task.");
+Q("Descriptive & Inferential","Using a regression model to predict future values is called:","prediction",["enumeration","registration","tabulation"],"Prediction is the third key inferential task.");
+Q("Descriptive & Inferential","Inferential statistics is built on:","probability theory",["raw counts only","graphical display only","hospital registers"],"It uses probability theory to draw conclusions about a population.");
+Q("Descriptive & Inferential","Histograms and box plots are tools of:","descriptive statistics",["inferential statistics only","hypothesis testing","parameter estimation"],"Graphical displays are descriptive tools.");
+Q("Descriptive & Inferential","A nutritionist reports the mean caloric intake of the 300 households she surveyed and makes no generalisation. This is:","descriptive statistics",["inferential statistics","predictive statistics","experimental statistics"],"She summarised her data without making inferences.");
+Q("Descriptive & Inferential","What would make the nutritionist’s analysis inferential?","Estimating the district mean from the sample mean using a CI",["Listing the daily caloric intake of every household surveyed","Plotting the 300 sample values in a histogram and box plot","Calculating the sample median, range and standard deviation"],"Using x̄ to estimate μ with a confidence interval goes beyond the data.");
+Q("Descriptive & Inferential","Which research question calls for inferential statistics?","Is mean yield different across the three districts?",["What is the mean yield in each of the sampled plots?","How many plots were sampled in each of the districts?","What is the highest yield recorded in the sampled plots?"],"Testing a difference across districts generalises beyond the sample.");
+Q("Descriptive & Inferential","Which question needs only descriptive statistics?","What was the median age of the 50 admitted patients?",["Is the mean age of all patients in Malawi above 20 years?","Will admissions rise during the next rainy season?","Does age influence the risk of severe malaria?"],"Summarising the 50 patients stays within the data.");
+Q("Descriptive & Inferential","From 1,000 households in a district, 35% use treated nets. Claiming that about 35% of all households in the district do so is:","inferential statistics",["descriptive statistics","a parameter calculation","primary data collection"],"Generalising from a sample to the district is inference.");
+Q("Descriptive & Inferential","Predicting next month’s malaria cases from past data is mainly:","inferential (prediction)",["descriptive summarisation","a population census","primary data collection"],"Predicting future values is inferential.");
+
+/* ───────────── POPULATION & SAMPLE ───────────── */
+Q("Population & Sample","A population is:","the complete collection of all units of interest to the researcher",["a subset of the units that is actually selected and then studied","any group made up of fewer than one thousand individuals or objects","the set of numerical values calculated from the collected data"],"A population is the complete collection of individuals, objects, measurements or events sharing a characteristic and of interest.");
+Q("Population & Sample","A sample is:","a subset of the population that is actually selected and studied",["the complete collection of everything that is of interest to the researcher","a numerical summary describing a characteristic of the whole population","the list of all the variables and values that were recorded in a study"],"A sample is a part of the population that is studied.");
+Q("Population & Sample","Which is a statistical population?","All children under 5 years in Malawi in 2023",["The 400 women interviewed by a PhD student","The 60 cattle selected from a herd","The 150 adults enrolled in a glucose study"],"The others are samples drawn from larger groups.");
+Q("Population & Sample","In statistics, the word ‘population’ can refer to:","any group from which information will be collected",["only the people who are living in a particular country","only groups made up of living organisms such as people","only groups that are larger than one million members"],"A population can be plants, objects, events or measurements, not only people.");
+Q("Population & Sample","A good sample should be:","representative, adequately sized and randomly selected",["as small as possible so that the cost stays very low","chosen from whichever individuals are easiest to reach","picked entirely by the researcher’s own personal judgement"],"These are the key properties of a good sample.");
+Q("Population & Sample","A representative sample is one that:","reflects the diversity of the population",["contains only the healthiest individuals","includes every member of the population","is chosen by the researcher’s preference"],"Representative means it mirrors the population.");
+Q("Population & Sample","Random selection in sampling mainly helps to avoid:","systematic bias",["sampling costs","the need for any analysis","all random variation"],"Random selection prevents systematic bias in most designs.");
+Q("Population & Sample","An adequately sized sample is one that is:","large enough to give precise estimates",["small enough to avoid any expense","identical in size to the population","large enough to remove all bias"],"Size affects precision, not bias.");
+Q("Population & Sample","Which is a reason for studying a sample instead of the whole population?","Studying everyone can be prohibitively expensive",["A sample always gives exact population values","Populations are always small and unchanging","Samples remove the need for any inference"],"Cost, time, feasibility and destructive testing justify sampling.");
+Q("Population & Sample","Complete enumeration of a population often takes too long. This is the ___ reason for sampling.","time",["cost","feasibility","destructive testing"],"Time is one of the four reasons.");
+Q("Population & Sample","Some populations are infinite or constantly changing. This is the ___ reason for sampling.","feasibility",["cost","time","destructive testing"],"It is not feasible to enumerate such populations.");
+Q("Population & Sample","Testing all blood samples would leave none for treatment. This illustrates:","destructive testing",["complete enumeration","random selection","systematic bias"],"Destructive testing is a reason for sampling.");
+Q("Population & Sample","A researcher measures haemoglobin in 80 pregnant women attending an antenatal clinic in Blantyre. The sample is:","the 80 pregnant women measured",["all women in Malawi","all antenatal clinics in Blantyre","the haemoglobin level in g/dL"],"The sample is the group actually studied.");
+Q("Population & Sample","In the same study, the most appropriate population is:","all pregnant women attending antenatal clinics in Blantyre",["the 80 pregnant women whose haemoglobin levels were measured","all women of child-bearing age living anywhere in the world","all haemoglobin readings recorded in the clinic’s ledger book"],"The population is the larger group the 80 women were drawn from. The exact definition depends on what the researcher intends to generalise to.");
+Q("Population & Sample","In the same study, the variable of interest is:","haemoglobin level (g/dL)",["the number of women (80)","the antenatal clinic attended","the city of Blantyre"],"A variable is the characteristic measured; here, haemoglobin.");
+Q("Population & Sample","A nutritionist surveys 300 smallholder households in Lilongwe District. The population is:","all smallholder farming households in Lilongwe District",["the 300 smallholder farming households that were surveyed","all smallholder farming households in the whole of Malawi","all the individual members of the 300 households surveyed"],"The population is the group the sample represents.");
+Q("Population & Sample","In the same survey, the sample is:","the 300 households actually surveyed",["all smallholder households in Lilongwe District","all households in Malawi","the average caloric intake"],"The sample is the part of the population studied.");
+Q("Population & Sample","A researcher selects 60 cattle from a herd of 1,200 and finds mean daily milk yield of 8.3 litres. The population is:","the herd of 1,200 cattle",["the 60 selected cattle","the 8.3-litre average","all cattle in Africa"],"The 60 are the sample; the herd is the population.");
+Q("Population & Sample","A researcher selects 60 cattle from a herd of 1,200. What percentage of the herd is sampled?","5%",["2%","20%","0.5%"],"60 ÷ 1,200 = 0.05 = 5%.");
+Q("Population & Sample","In a study of 250 HIV-positive patients, the 250 patients are the:","sample",["population","parameter","variable"],"They are the group actually studied.");
+Q("Population & Sample","Which sample is most likely to represent all adults in a district?","500 adults chosen at random from the district register",["500 adults who attend one private clinic in the district","500 adults who volunteered after a radio call-in programme","500 adults all selected from a single wealthy suburb"],"Random selection from a full list avoids systematic bias.");
+Q("Population & Sample","A census differs from a sample survey because a census:","collects information from every member of the population",["selects only a random subset of members of the population","measures only a single variable on each person in the study","uses only secondary data taken from earlier published studies"],"A census is complete enumeration.");
+Q("Population & Sample","We study a sample and use its results to make inferences about the:","population",["variable","observation","statistic"],"Sample results are used to infer population characteristics.");
+
+/* ───────────── PARAMETER & STATISTIC ───────────── */
+Q("Parameter & Statistic","A parameter is a numerical summary describing a characteristic of the:","population",["sample","variable","observation"],"Parameter ↔ population.");
+Q("Parameter & Statistic","A statistic is a numerical summary describing a characteristic of the:","sample",["population","variable","parameter"],"Statistic ↔ sample.");
+Q("Parameter & Statistic","Parameters are usually:","unknown and the target of estimation",["known and calculated from observed data","denoted by Roman letters","calculated only from a sample"],"We usually do not know the parameter; we estimate it.");
+Q("Parameter & Statistic","Statistics are usually:","known, being calculated from the observed data",["unknown values that are fixed for the entire population","always denoted by Greek letters such as μ, σ and π","impossible to compute in any practical situation"],"Statistics come from the data we have.");
+Q("Parameter & Statistic","The population mean is denoted by:","μ",["σ","π","s"],"μ = population mean.");
+Q("Parameter & Statistic","The sample mean is denoted by:",`${XB}`,["μ","σ","s"],"x̄ = sample mean.");
+Q("Parameter & Statistic","The population standard deviation is denoted by:","σ",["s","μ","π"],"σ = population SD.");
+Q("Parameter & Statistic","The sample standard deviation is denoted by:","s",["σ","μ","π"],"s = sample SD.");
+Q("Parameter & Statistic","The population proportion is denoted by:","π",[PH,"μ","σ"],"π = population proportion.");
+Q("Parameter & Statistic","The sample proportion is denoted by:",PH,["π","μ","σ"],"p̂ = sample proportion.");
+Q("Parameter & Statistic","Greek letters are used for ___ and Roman letters for ___.","parameters; statistics",["statistics; parameters","samples; populations","variables; observations"],"μ, σ, π are parameters; x̄, s, p̂ are statistics.");
+Q("Parameter & Statistic","The true mean fasting blood glucose of all adults in Malawi is best denoted:","μ",[XB,"s",PH],"It is a population parameter.");
+Q("Parameter & Statistic","The mean fasting blood glucose of the 150 adults in our study is 5.4 mmol/L. This is written:",`${XB} = 5.4 mmol/L`,["μ = 5.4 mmol/L","σ = 5.4 mmol/L","π = 5.4 mmol/L"],"It is a sample statistic. (Note: your slide writes ‘μ kg’ for the parameter; glucose is measured in mmol/L, not kg.)");
+Q("Parameter & Statistic","The goal of quantitative research is to understand populations by finding:","parameters",["samples","observations","variables"],"We seek the parameters, usually by estimating from samples.");
+Q("Parameter & Statistic","Because data cannot be collected from everyone, we use ___ to estimate ___.","sample statistics; population parameters",["population parameters; sample statistics","observations; variables","variables; observations"],"Statistics estimate parameters.");
+Q("Parameter & Statistic","The average caloric intake of the 300 households surveyed is a:","statistic, because it describes the sample",["parameter, because it describes the district","parameter, because it is an average","statistic, because it describes the district"],"It summarises the sample only.");
+Q("Parameter & Statistic","The mean haemoglobin of 80 pregnant women in a clinic study is 11.2 g/dL. The type and symbol are:",`statistic, ${XB}`,["parameter, μ","statistic, μ",`parameter, ${XB}`],"A sample summary is a statistic and uses a Roman letter.");
+Q("Parameter & Statistic","The national under-5 mortality rate of 42 per 1,000 is based on all registered births. This number is a:","parameter",["statistic","sample","variable"],"It describes the whole population covered by the registry.");
+Q("Parameter & Statistic","A veterinary researcher’s average milk yield of 8.3 litres from 60 cattle is a:","statistic",["parameter","population","variable"],"It comes from a sample of 60 from the herd of 1,200.");
+Q("Parameter & Statistic","The median CD4 count of 320 cells/μL among 250 HIV-positive patients in a study is a:","statistic",["parameter","population","variable"],"It is calculated from the 250 patients studied.");
+Q("Parameter & Statistic","A parameter differs from a statistic in that a parameter is:","a fixed value for the population",["different for each sample drawn","calculated from the observed data","denoted by a Roman letter"],"A statistic varies from sample to sample; the parameter is fixed.");
+Q("Parameter & Statistic","The heights of all 40 students in one class are measured and the mean reported. If that class is the entire group of interest, the mean is a:","parameter, since the class is the whole population of interest",["statistic, since the heights were measured from a single class","parameter, since any mean is a single numerical summary value","statistic, since only 40 students out of the school were used"],"Whether a number is a parameter or statistic depends on whether the group measured is the entire population of interest.");
+
+/* ───────────── VARIABLES & DATA ───────────── */
+Q("Variables & Data","A variable is:","a characteristic that varies over time or between individuals",["a single recorded value of a characteristic of one individual","the information that arises from counts, measurements or responses","a numerical summary that describes a characteristic of a whole population"],"Examples: hair colour, height, WBC count, age, weight.");
+Q("Variables & Data","Data are:","information coming from observations, counts or measurements",["a characteristic that changes between individuals or over time","a single recorded value of one variable for a single individual","numerical summaries that describe an entire target population"],"Data come from observations, counts, measurements or responses.");
+Q("Variables & Data","An observation is:","a single recorded value of a variable",["a characteristic that varies between individuals","the collection of all values in a study","a numerical summary of a sample"],"E.g. 25 years is one observation of age.");
+Q("Variables & Data","If the variable is age, then 25 years is:","one observation",["one variable","one population","one parameter"],"An observation is a single recorded value.");
+Q("Variables & Data","Which of the following is a variable?","White blood cell count",["Blantyre District itself","The Ministry of Health","A hospital register"],"A variable is a characteristic that changes between individuals.");
+Q("Variables & Data","Which is listed as an example of a variable?","Number of malaria cases",["The Ministry of Health","The hospital register","The statistical process"],"Examples include height, age, weight of children, number of malaria cases and BP readings.");
+Q("Variables & Data","Systolic blood pressure is measured once for each of 80 patients. How many observations of the variable are there?","80",["1","160","8"],"One recorded value per patient gives 80 observations.");
+Q("Variables & Data","A table records age, sex and systolic BP for 3 patients. How many observations of the variable ‘age’ are there?","3",["1","6","9"],"One age per patient gives 3 observations.");
+Q("Variables & Data","In the same table (age, sex, systolic BP for 3 patients), how many values are recorded in total?","9",["3","6","12"],"3 patients × 3 variables = 9 recorded values.");
+
+/* ───────────── PRIMARY & SECONDARY DATA ───────────── */
+Q("Primary & Secondary Data","Primary data are:","collected first-hand by the researcher for the study at hand",["collected earlier by another researcher for a different purpose","taken from published reports and existing national databases","reused from the published files of a government statistical agency"],"Primary data are original and not previously published or used.");
+Q("Primary & Secondary Data","Secondary data are:","collected earlier by someone else, usually for a different purpose",["collected first-hand by the researcher for the very study at hand","never previously published or used in any earlier research study","original data from the researcher’s own carefully controlled experiment"],"Secondary data are reused for the current study.");
+Q("Primary & Secondary Data","A researcher extracts malaria case records from a hospital register (2015–2022). The data are:","secondary, because the records were collected for clinical purposes",["primary, because the hospital is the original source of the records","primary, because the records concern malaria cases in the hospital","secondary, because the researcher collected them in the wards"],"Records were not collected for this research.");
+Q("Primary & Secondary Data","A PhD student interviews 400 women face to face about antenatal care uptake. The data are:","primary, collected directly for this study",["secondary, because the women were registered","secondary, because interviews are published","primary, because they come from a government dataset"],"Data collected directly by the researcher for the study are primary.");
+Q("Primary & Secondary Data","An analyst downloads WHO TB incidence data for sub-Saharan Africa. The data are:","secondary, because WHO collected them for surveillance",["primary, because WHO is reliable","primary, because the analyst downloaded them","secondary, because they were collected by the analyst"],"The analyst re-uses data collected by WHO.");
+Q("Primary & Secondary Data","A lab technician measures CD4 counts for participants enrolled in a new clinical trial. The data are:","primary, because they were taken specifically for the trial",["secondary, because laboratories already keep registers of results","secondary, because CD4 counts are a routine standard measurement","primary, because the data were published in earlier papers"],"Measurements taken for the trial are primary.");
+Q("Primary & Secondary Data","A researcher measures blood pressure from patients during a study. The data are:","primary",["secondary","a parameter","a population"],"Collected directly for the study.");
+Q("Primary & Secondary Data","A student analyses Ministry of Health malaria reports. The data are:","secondary",["primary","a statistic","a sample"],"The reports were produced by others.");
+Q("Primary & Secondary Data","A lecturer collects test marks from students in her class for her own analysis. The data are:","primary",["secondary","a parameter","a population"],"She collected them directly for her purpose.");
+Q("Primary & Secondary Data","A researcher uses national census data to study population growth. The data are:","secondary",["primary","a statistic","a sample"],"The census agency collected the data; the researcher re-uses them.");
+Q("Primary & Secondary Data","A laboratory scientist records new test results from blood samples. The data are:","primary",["secondary","a parameter","a population"],"New measurements taken first-hand are primary.");
+Q("Primary & Secondary Data","Census data collected directly from households by the census agency are:","primary data",["secondary data","a parameter","a sample statistic"],"For the agency that collected them they are primary; for a later researcher re-using them they are secondary.");
+Q("Primary & Secondary Data","Which is a method of collecting primary data?","Interview or questionnaire",["Published scientific literature","Hospital register extraction","WHO database download"],"Primary methods: direct observation, interview/questionnaire, experiment, registration, clinical measurement.");
+Q("Primary & Secondary Data","Observing the number of mosquito bites on study participants over a night is:","direct observation",["registration","clinical measurement","a questionnaire"],"The researcher personally observes and records.");
+Q("Primary & Secondary Data","Interviewing patients about their dietary habits for a nutritional study is:","an interview",["registration","direct observation","clinical measurement"],"Information obtained by asking questions.");
+Q("Primary & Secondary Data","Giving a drug to a treatment group and measuring outcomes is:","an experiment",["registration","direct observation","an existing database"],"Experiments collect data under controlled conditions.");
+Q("Primary & Secondary Data","Civil registration of births and deaths is an example of:","registration",["an experiment","a questionnaire","clinical measurement"],"Mandatory recording of events.");
+Q("Primary & Secondary Data","Measuring fasting blood glucose in a diabetes screening study is:","clinical measurement",["registration","direct observation","an interview"],"Direct measurement using instruments.");
+Q("Primary & Secondary Data","An advantage of primary data is that they are:","tailored exactly to the research question",["readily available and inexpensive","often available in large sample sizes","useful for historical trend analysis"],"Researcher controls quality and minimises missing variables.");
+Q("Primary & Secondary Data","A disadvantage of primary data is that they are:","expensive and time-consuming to collect",["not matched to the research question","of unknown quality and completeness","often outdated or systematically biased"],"Also require trained personnel; feasibility may be limited.");
+Q("Primary & Secondary Data","An advantage of secondary data is that they are:","readily available and inexpensive",["controlled for quality by the researcher","tailored exactly to the research question","free of any irrelevant variables"],"Historical data also allow trend analysis and reduce the burden on participants.");
+Q("Primary & Secondary Data","A disadvantage of secondary data is that:","variables of interest may not have been recorded",["trained personnel are needed to collect them","they are expensive and time-consuming to collect","feasibility is limited by the researcher’s resources"],"They may not match the question; quality may be unknown; may be outdated or biased.");
+Q("Primary & Secondary Data","Which is a source of secondary data in health sciences?","The national health management information system (HMIS)",["A face-to-face interview you personally conduct with patients","A laboratory test that you run on newly collected samples","An experiment that you design and carry out in the field"],"Others: vital registration, hospital records, literature, NSO, WHO, World Bank, DHS.");
+Q("Primary & Secondary Data","Which organisation is given as a government source of statistics in Malawi?","National Statistical Office",["Reserve Bank of Malawi","Malawi Revenue Authority","Malawi Electoral Commission"],"Government statistical agencies, e.g. the National Statistical Office.");
+Q("Primary & Secondary Data","Why is a secondary data approach better for studying under-5 mortality trends in Malawi from 2000 to 2020?","Primary collection would need cohorts followed for 20 years",["Primary data are always less accurate than secondary data","Secondary data never contain systematic biases or gaps","Under-5 mortality cannot be measured by any survey"],"Following children for 20 years is practically infeasible; DHS datasets already exist.");
+Q("Primary & Secondary Data","DHS datasets were collected to measure broad health indicators, but contain variables needed for a mortality trend study. For that study they are:","secondary, but they contain the needed variables",["primary, because DHS used households","primary, because they measure mortality","secondary, so they cannot be used for trends"],"Reused data collected for another purpose.");
+Q("Primary & Secondary Data","The key lesson of the DHS worked example is to:","critically assess the quality and relevance of secondary data",["avoid secondary data altogether when studying trends over time","assume that primary data are always cheaper and faster to collect","skip all quality checks for datasets that are already published"],"Secondary data can answer questions primary data cannot, but must be critically assessed.");
+Q("Primary & Secondary Data","Saying primary data are ‘original’ means they have:","not been previously published or used for other research",["been verified and officially approved by a government agency","been collected only by hospitals, clinics and health centres","been stored in a national database for later public use"],"Primary data are original.");
+
+/* ───────────── CALCULATIONS ───────────── */
+Q("Calculations","Ages of 5 malaria patients are 4, 6, 9, 12 and 4 years. The mean age is:","7.0 years",["6.0 years","4.0 years","8.0 years"],"(4 + 6 + 9 + 12 + 4) ÷ 5 = 35 ÷ 5 = 7.0.");
+Q("Calculations","For the ages 4, 6, 9, 12 and 4 years, the median age is:","6 years",["7 years","4 years","9 years"],"Ordered: 4, 4, 6, 9, 12; the middle value is 6.");
+Q("Calculations","For the ages 4, 6, 9, 12 and 4 years, the mode is:","4 years",["6 years","7 years","12 years"],"4 occurs twice.");
+Q("Calculations","For the ages 4, 6, 9, 12 and 4 years, the range is:","8 years",["12 years","4 years","7 years"],"12 − 4 = 8.");
+Q("Calculations","In the 3-patient table (ages 45, 32, 60; systolic BP 150, 118, 165), the proportion hypertensive (patients 1 and 3) is:","2/3 (66.7%)",["1/3 (33.3%)","3/3 (100%)","1/2 (50%)"],"2 hypertensive out of 3 patients.");
+Q("Calculations","The mean age of the three patients (45, 32, 60 years) is:","45.7 years",["45.0 years","46.7 years","32.0 years"],"(45 + 32 + 60) ÷ 3 = 137 ÷ 3 = 45.67.");
+Q("Calculations","The median age of the three patients (45, 32, 60) is:","45 years",["32 years","60 years","45.7 years"],"Ordered: 32, 45, 60; the middle is 45.");
+Q("Calculations","The mean systolic BP of the three patients (150, 118, 165) is:","144.3 mmHg",["150.0 mmHg","141.7 mmHg","118.0 mmHg"],"(150 + 118 + 165) ÷ 3 = 433 ÷ 3 = 144.33.");
+Q("Calculations","The median systolic BP of the three patients (150, 118, 165) is:","150 mmHg",["144.3 mmHg","118 mmHg","165 mmHg"],"Ordered: 118, 150, 165; the middle is 150.");
+Q("Calculations","In a district, 4,500 of 6,000 eligible children were vaccinated against measles. The coverage is:","75%",["60%","25%","45%"],"4,500 ÷ 6,000 = 0.75.");
+Q("Calculations","Underweight prevalence fell from 30% to 18%. The absolute change is:","12 percentage points",["18 percentage points","40 percentage points","1.67 percentage points"],"30 − 18 = 12.");
+Q("Calculations","Underweight prevalence fell from 30% to 18%. The relative reduction is:","40%",["12%","60%","18%"],"(30 − 18) ÷ 30 = 0.40.");
+Q("Calculations","In a sample of 200 adults, 40 are hypertensive. The sample proportion is:","0.20",["0.40","0.25","0.80"],"40 ÷ 200 = 0.20.");
+Q("Calculations","If 20% of 150 sampled adults are hypertensive, how many adults is that?","30",["20","15","75"],"0.20 × 150 = 30.");
+Q("Calculations","Of 50 patients admitted with malaria, 30 are female. The percentage who are male is:","40%",["60%","30%","20%"],"20 males ÷ 50 = 0.40.");
+Q("Calculations","Of 50 patients admitted with malaria, 30 are female. The sample proportion of females is:",`${PH} = 0.60`,["π = 0.60",`${PH} = 0.30`,"π = 0.30"],"30 ÷ 50 = 0.60, and a sample proportion is p̂.");
+Q("Calculations","A 95% confidence interval for mean birth weight is 3.0–3.2 kg. The point estimate (midpoint) is:","3.1 kg",["3.0 kg","3.2 kg","0.1 kg"],"(3.0 + 3.2) ÷ 2 = 3.1.");
+Q("Calculations","A 95% confidence interval for mean birth weight is 3.0–3.2 kg. The width of the interval is:","0.2 kg",["0.1 kg","3.1 kg","6.2 kg"],"3.2 − 3.0 = 0.2.");
+Q("Calculations","Haemoglobin values of 80 pregnant women sum to 896 g/dL. The mean is:","11.2 g/dL",["10.8 g/dL","11.9 g/dL","72.0 g/dL"],"896 ÷ 80 = 11.2.");
+Q("Calculations","Mean BP is 128 mmHg for Drug A patients and 121 mmHg for Drug B patients. The difference (A − B) is:","7 mmHg",["−7 mmHg","249 mmHg","1.06 mmHg"],"128 − 121 = 7.");
+Q("Calculations","A sample of 10 children has a mean weight of 14.2 kg. Their total weight is:","142 kg",["14.2 kg","24.2 kg","1.42 kg"],"Total = mean × n = 14.2 × 10.");
+Q("Calculations","Malaria cases were 120 in January, 135 in February and 150 in March. The mean monthly cases are:","135",["120","150","405"],"405 ÷ 3 = 135. (405 is the total.)");
+Q("Calculations","If prevalence is 20%, how many of 400 sampled adults would you expect to be hypertensive?","80",["20","40","320"],"0.20 × 400 = 80.");
+Q("Calculations","A sample of 60 cattle from a herd of 1,200 has mean milk yield of 8.3 L/day. An estimate of the herd’s total daily milk is:","9,960 litres",["498 litres","8.3 litres","1,200 litres"],"8.3 × 1,200 = 9,960. (498 is only the sample’s total.) This is an inference from a sample.");
+
+/* ───────────── APP LOGIC ───────────── */
+const TOPICS = [...new Set(QUESTIONS.map(q => q.s))];
+const AVATARS = ['#3498db','#2980b9','#2ecc71','#e74c3c','#9b59b6','#1abc9c','#e67e22','#34495e'];
+
+function load(k, d){ try { return JSON.parse(localStorage.getItem(k) || d); } catch(e){ return JSON.parse(d); } }
+function save(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
+
+let activeTopics = new Set(TOPICS);
+let quiz = [];
+let cur = 0, score = 0, answered = false;
+let currentUser = {name:'', reg:''};
+let leaderboard = load('bst32101_lb', '[]');
+let comments = load('bst32101_comments', '{}');
+
+function shuffle(a){
+  a = a.slice();
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-'+id).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  if(id==='leaderboard'){ renderLB(); document.querySelectorAll('.nav-btn')[1].classList.add('active'); }
+  else document.querySelectorAll('.nav-btn')[0].classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function buildTopicGrid(){
+  const g = document.getElementById('topic-grid');
+  g.innerHTML='';
+  TOPICS.forEach(t => {
+    const b = document.createElement('button');
+    b.className = 'topic-toggle on';
+    b.textContent = t;
+    b.onclick = function(){
+      if(activeTopics.has(t)){
+        if(activeTopics.size === 1) return;
+        activeTopics.delete(t); b.className='topic-toggle';
+      } else {
+        activeTopics.add(t); b.className='topic-toggle on';
+      }
+    };
+    g.appendChild(b);
+  });
+}
+
+function startQuiz(){
+  const name = document.getElementById('inp-name').value.trim();
+  const reg = document.getElementById('inp-reg').value.trim();
+  if(!name){ alert('Please enter your name to begin.'); return; }
+  currentUser = { name, reg };
+  let pool = shuffle(QUESTIONS.filter(q => activeTopics.has(q.s)));
+  const cnt = document.getElementById('inp-count').value;
+  if(cnt !== 'all') pool = pool.slice(0, parseInt(cnt, 10));
+  quiz = pool;
+  if(quiz.length === 0){ alert('Select at least one topic.'); return; }
+  cur = 0; score = 0; answered = false;
+  showScreen('quiz');
+  renderQ();
+}
+
+function renderQ(){
+  if(cur >= quiz.length){ endQuiz(); return; }
+  const q = quiz[cur];
+  document.getElementById('prog-fill').style.width = ((cur / quiz.length) * 100) + '%';
+  document.getElementById('prog-label').textContent = `Question ${cur+1} of ${quiz.length}`;
+  document.getElementById('prog-score').textContent = `${score} pts`;
+  document.getElementById('q-section').innerHTML = q.s;
+  document.getElementById('q-text').innerHTML = q.q;
+
+  const opts = document.getElementById('options');
+  opts.innerHTML = '';
+  const shuffled = shuffle(q.opts.map((opt, i) => ({opt, isCorrect: i === 0})));
+  const correctIdx = shuffled.findIndex(o => o.isCorrect);
+  const letters = ['A','B','C','D'];
+  shuffled.forEach((o, i) => {
+    const b = document.createElement('button');
+    b.className = 'opt-btn';
+    b.innerHTML = `<span class="opt-letter">${letters[i]}</span><span>${o.opt}</span>`;
+    b.onclick = function(){ if(!answered) select(i, correctIdx, b, q.exp); };
+    opts.appendChild(b);
+  });
+
+  document.getElementById('feedback').style.display = 'none';
+  document.getElementById('discussion-section').style.display = 'none';
+  document.getElementById('next-btn').style.display = 'none';
+  document.getElementById('next-btn').textContent = (cur === quiz.length - 1) ? 'Finish →' : 'Next Question →';
+  answered = false;
+  window.scrollTo(0,0);
+}
+
+function select(selectedIdx, correctIdx, btn, exp){
+  answered = true;
+  document.querySelectorAll('.opt-btn').forEach(b => b.disabled = true);
+  const fb = document.getElementById('feedback');
+  if(selectedIdx === correctIdx){
+    btn.classList.add('correct');
+    score++;
+    fb.className = 'feedback-box correct';
+    fb.innerHTML = `<strong>✓ Correct!</strong>${exp}`;
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('.opt-btn')[correctIdx].classList.add('correct');
+    fb.className = 'feedback-box wrong';
+    fb.innerHTML = `<strong>✗ Not quite.</strong>${exp}`;
+  }
+  fb.style.display = 'block';
+  document.getElementById('next-btn').style.display = 'inline-flex';
+  document.getElementById('prog-score').textContent = `${score} pts`;
+  showDiscussion(cur);
+}
+
+function nextQ(){ cur++; renderQ(); }
+
+function qKey(idx){
+  const t = quiz[idx].q.replace(/<[^>]*>/g,'').replace(/[^a-zA-Z0-9]/g,'').slice(0, 40);
+  return 'che_' + t;
+}
+function showDiscussion(idx){
+  const key = qKey(idx);
+  document.getElementById('discussion-section').style.display = 'block';
+  renderComments(key);
+  document.getElementById('comment-input').dataset.key = key;
+}
+function renderComments(key){
+  const list = document.getElementById('comments-list');
+  const c = comments[key] || [];
+  if(c.length === 0){
+    list.innerHTML = '<div class="no-comments">No notes yet — add your own observation.</div>';
+    return;
+  }
+  list.innerHTML = c.map(cm => `
+    <div class="comment">
+      <div class="comment-author">${escHtml(cm.name)} ${cm.reg ? '<span style="color:var(--muted);font-weight:400">· '+escHtml(cm.reg)+'</span>' : ''}</div>
+      <div class="comment-text">${escHtml(cm.text)}</div>
+      <div class="comment-time">${cm.time}</div>
+    </div>`).join('');
+  list.scrollTop = list.scrollHeight;
+}
+function postComment(){
+  const inp = document.getElementById('comment-input');
+  const key = inp.dataset.key;
+  const text = inp.value.trim();
+  if(!text || !key) return;
+  if(!comments[key]) comments[key] = [];
+  const now = new Date();
+  comments[key].push({
+    name: currentUser.name, reg: currentUser.reg, text,
+    time: now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) + ' · ' + now.toLocaleDateString()
+  });
+  save('bst32101_comments', comments);
+  inp.value = '';
+  renderComments(key);
+}
+
+function endQuiz(){
+  const total = quiz.length;
+  const pct = Math.round((score / total) * 100);
+  document.getElementById('result-ring').style.setProperty('--pct', pct + '%');
+  document.getElementById('result-pct').textContent = pct + '%';
+  document.getElementById('bd-correct').textContent = score;
+  document.getElementById('bd-wrong').textContent = total - score;
+  document.getElementById('bd-total').textContent = total;
+
+  let title, sub;
+  if(pct >= 90){ title='Statistics Master!'; sub='Excellent grasp of key concepts: sampling, parameters vs statistics, data sources and the statistical process.'; }
+  else if(pct >= 75){ title='Well done!'; sub='Strong performance. Revise the parameter/statistic symbols and the data-source classifications to reach 100%.'; }
+  else if(pct >= 60){ title='Good effort.'; sub='Solid base. Revisit population vs sample, descriptive vs inferential and the worked calculations.'; }
+  else { title='Back to the slides.'; sub='Re-read the lecture slides, redo the worked examples, then try again.'; }
+  document.getElementById('result-title').textContent = title;
+  document.getElementById('result-sub').textContent = sub;
+
+  leaderboard.push({
+    name: currentUser.name, reg: currentUser.reg, score, total, pct,
+    time: new Date().toLocaleDateString(),
+    color: AVATARS[Math.abs(hashStr(currentUser.name)) % AVATARS.length]
+  });
+  leaderboard.sort((a,b) => b.pct - a.pct || b.score - a.score);
+  save('bst32101_lb', leaderboard);
+  document.getElementById('stat-players').textContent = leaderboard.length;
+  showScreen('result');
+}
+
+function restartQuiz(){ showScreen('home'); }
+
+function renderLB(){
+  const rows = document.getElementById('lb-rows');
+  document.getElementById('lb-count').textContent = `${leaderboard.length} attempt${leaderboard.length!==1?'s':''}`;
+  if(leaderboard.length === 0){
+    rows.innerHTML = '<div class="lb-empty">No results yet. Be the first to take the quiz!</div>';
+    return;
+  }
+  const rankClass = ['gold','silver','bronze'];
+  const rankLabel = ['1st','2nd','3rd'];
+  rows.innerHTML = leaderboard.slice(0,20).map((e,i) => {
+    const initials = e.name.split(' ').filter(Boolean).map(n => n[0]).join('').toUpperCase().slice(0,2);
+    const isYou = currentUser.name && e.name === currentUser.name;
+    return `<div class="lb-row">
+      <div class="lb-rank ${rankClass[i]||''}">${i<3?rankLabel[i]:i+1}</div>
+      <div class="lb-avatar" style="background:${e.color}22;color:${e.color}">${escHtml(initials)}</div>
+      <div class="lb-info">
+        <div class="lb-name">${escHtml(e.name)} ${isYou?'<span class="badge-you">you</span>':''}</div>
+        <div class="lb-meta">${e.reg ? escHtml(e.reg)+' · ' : ''}${e.time}</div>
+      </div>
+      <div class="lb-score-wrap">
+        <div class="lb-score">${e.score}/${e.total}</div>
+        <div class="lb-pct">${e.pct}%</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function hashStr(s){ let h=0; for(let c of s){ h=((h<<5)-h)+c.charCodeAt(0); h|=0; } return h; }
+function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+buildTopicGrid();
+document.getElementById('stat-q').textContent = QUESTIONS.length;
+document.getElementById('stat-t').textContent = TOPICS.length;
+document.getElementById('stat-players').textContent = leaderboard.length;
+</script>
+</body>
+</html>
